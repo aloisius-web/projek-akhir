@@ -14,6 +14,7 @@ $stmt->fetch();
 $stmt->close();
 
 if ($password_hash && password_verify($password_asli, $password_hash)) {
+    session_regenerate_id(true);
     $_SESSION["status_login"] = true;
     $_SESSION["id_user"]      = $id_user;
     $_SESSION["nama"]         = $nama;

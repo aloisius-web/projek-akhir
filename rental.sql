@@ -162,7 +162,9 @@ ALTER TABLE `mobil`
 ALTER TABLE `pesanan`
   ADD CONSTRAINT `pesanan_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`),
   ADD CONSTRAINT `pesanan_ibfk_2` FOREIGN KEY (`id_mobil`) REFERENCES `mobil` (`id_mobil`);
-COMMIT;
+  INSERT INTO `kategori` (`id_kategori`, `nama_kategori`) VALUES (1, 'MPV'), (2, 'SUV'), (3, 'Sedan'), (4, 'City Car');
+  INSERT INTO `users` (`id_user`, `nama`, `email`, `no_hp`, `password`, `role`) VALUES (1, 'Admin', 'admin@rental.com', '081234567890', '$2y$10$8K/EfZmLMDqI3d0458hl6ORUvinZqJzqatELkjZ2eYNVK42WcLvzO', 'admin');
+  COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
