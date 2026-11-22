@@ -39,7 +39,9 @@ $kategori = $koneksi->query("SELECT * FROM kategori ORDER BY nama_kategori");
 <header class="bar">
     <a class="brand" href="admin.php">Rentalku</a>
     <nav class="nav">
-        <a href="mobilAdmin.php">Data Mobil</a>
+        <a href="admin.php">Dashboard</a>
+        <a href="mobilAdmin.php" class="aktif">Kelola Mobil</a>
+        <a href="pesananAdmin.php">Pesanan</a>
         <a href="logout.php">Logout</a>
     </nav>
 </header>

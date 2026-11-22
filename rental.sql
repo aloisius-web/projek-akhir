@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2026 at 01:25 PM
+-- Generation Time: Nov 22, 2026 at 01:47 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -32,6 +32,15 @@ CREATE TABLE `kategori` (
   `nama_kategori` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `kategori`
+--
+
+INSERT INTO `kategori` (`id_kategori`, `nama_kategori`) VALUES
+(1, 'MPV'),
+(2, 'SUV'),
+(3, 'City Car');
+
 -- --------------------------------------------------------
 
 --
@@ -50,6 +59,15 @@ CREATE TABLE `mobil` (
   `aktif` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `mobil`
+--
+
+INSERT INTO `mobil` (`id_mobil`, `id_kategori`, `nama_mobil`, `transmisi`, `kursi`, `harga_harian`, `foto`, `deskripsi`, `aktif`) VALUES
+(1, 1, 'Toyota Avanza', 'manual', 7, 350000, 'mobil_6afab192ed4d5.jpg', 'Mobil keluarga yang nyaman dan muat banyak penumpang.', 1),
+(2, 1, 'Daihatsu Xenia', 'manual', 7, 330000, 'mobil_6afab3c9a1dbb.jpeg', 'MPV ekonomis dan irit untuk perjalanan keluarga.', 1),
+(3, 1, 'Suzuki Ertiga', 'matic', 6, 380000, 'mobil_6afab420a7e56.jpg', 'MPV matic yang nyaman untuk perjalanan jauh', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -62,7 +80,6 @@ CREATE TABLE `pesanan` (
   `id_mobil` int(11) NOT NULL,
   `tgl_mulai` date NOT NULL,
   `tgl_selesai` date NOT NULL,
-  `dengan_sopir` tinyint(1) NOT NULL DEFAULT 0,
   `total_harga` int(11) NOT NULL,
   `status_pesanan` enum('menunggu','diterima','ditolak','selesai','dibatalkan') NOT NULL DEFAULT 'menunggu',
   `metode_bayar` enum('transfer','di_tempat') DEFAULT NULL,
@@ -70,6 +87,13 @@ CREATE TABLE `pesanan` (
   `bukti_bayar` varchar(255) DEFAULT NULL,
   `tgl_pesan` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pesanan`
+--
+
+INSERT INTO `pesanan` (`id_pesanan`, `id_user`, `id_mobil`, `tgl_mulai`, `tgl_selesai`, `total_harga`, `status_pesanan`, `metode_bayar`, `status_bayar`, `bukti_bayar`, `tgl_pesan`) VALUES
+(1, 3, 2, '2026-11-23', '2026-12-01', 2970000, 'menunggu', NULL, 'belum_bayar', NULL, '2026-11-22 12:11:29');
 
 -- --------------------------------------------------------
 
@@ -85,6 +109,15 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` enum('pelanggan','admin') NOT NULL DEFAULT 'pelanggan'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id_user`, `nama`, `email`, `no_hp`, `password`, `role`) VALUES
+(1, 'admin', 'admin@gmail.com', '08123456789', '$2y$10$p/e.3OTBJ6c0OoZMbm20/OBNtEVDG8Pze6.COcrabC8jU6oR1gx0e', 'admin'),
+(2, 'poe', 'poe@gmail.com', '08', '$2y$10$8JoVWTE77x5a8GxFwffqj.phjsdBSHZC/m8PdpEmxwomF0Kg8HuR.', 'pelanggan'),
+(3, 'manusiaa', 'manusia@gmail.com', '0812345678', '$2y$10$3clvCaSRu2P9l39poHAmdudEs6UsY6qiDhTlO9eb0QrL0gDY6Vw8i', 'pelanggan');
 
 --
 -- Indexes for dumped tables
@@ -126,25 +159,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `kategori`
 --
 ALTER TABLE `kategori`
-  MODIFY `id_kategori` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_kategori` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `mobil`
 --
 ALTER TABLE `mobil`
-  MODIFY `id_mobil` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_mobil` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pesanan`
 --
 ALTER TABLE `pesanan`
-  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -162,9 +195,7 @@ ALTER TABLE `mobil`
 ALTER TABLE `pesanan`
   ADD CONSTRAINT `pesanan_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`),
   ADD CONSTRAINT `pesanan_ibfk_2` FOREIGN KEY (`id_mobil`) REFERENCES `mobil` (`id_mobil`);
-  INSERT INTO `kategori` (`id_kategori`, `nama_kategori`) VALUES (1, 'MPV'), (2, 'SUV'), (3, 'Sedan'), (4, 'City Car');
-  INSERT INTO `users` (`id_user`, `nama`, `email`, `no_hp`, `password`, `role`) VALUES (1, 'Admin', 'admin@rental.com', '081234567890', '$2y$10$8K/EfZmLMDqI3d0458hl6ORUvinZqJzqatELkjZ2eYNVK42WcLvzO', 'admin');
-  COMMIT;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

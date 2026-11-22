@@ -11,7 +11,7 @@ $q = $koneksi->query("SELECT m.*, k.nama_kategori FROM mobil m JOIN kategori k O
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Mobil | Rentalku</title>
+    <title>Kelola Mobil | Rentalku</title>
     <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -19,13 +19,15 @@ $q = $koneksi->query("SELECT m.*, k.nama_kategori FROM mobil m JOIN kategori k O
     <a class="brand" href="admin.php">Rentalku</a>
     <nav class="nav">
         <a href="admin.php">Dashboard</a>
+        <a href="mobilAdmin.php" class="aktif">Kelola Mobil</a>
+        <a href="pesananAdmin.php">Pesanan</a>
         <a href="logout.php">Logout</a>
     </nav>
 </header>
 
 <main class="wrap">
     <div class="kepala">
-        <h2>Data mobil</h2>
+        <h2>Kelola Mobil</h2>
         <a class="btn" href="mobilTambah.php">Tambah mobil</a>
     </div>
 

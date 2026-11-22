@@ -51,9 +51,27 @@
             <button type="submit" class="btn">LOGIN</button>
         </form>
 
-        <p class="switch">Belum punya akun? <a href="signup.php">Sign Up</a></p>
+        <p class="switch" id="tautan-signup">Belum punya akun? <a href="signup.php">Sign Up</a></p>
     </main>
-
 </div>
+
+<script>
+const radioPelanggan = document.querySelector("#role-pelanggan");
+const radioAdmin = document.querySelector("#role-admin");
+const tautanSignup = document.querySelector("#tautan-signup");
+
+function aturTautanSignup(){
+    if(radioAdmin.checked){
+        tautanSignup.style.display = "none";
+    }else{
+        tautanSignup.style.display = "block";
+    }
+}
+
+radioPelanggan.addEventListener("change", aturTautanSignup);
+radioAdmin.addEventListener("change", aturTautanSignup);
+aturTautanSignup();
+</script>
+
 </body>
 </html>
