@@ -1,3 +1,38 @@
+<?php
+session_start();
+include "koneksi.php";
+
+if(isset($_POST["submit"])){
+    $email = trim($_POST["email"]);
+    $password_asli = $_POST["password"];
+    $role = $_POST["role"];
+
+    $stmt = $koneksi->prepare("SELECT id_user, nama, password, role FROM users WHERE email = ? AND role = ?");
+    $stmt->bind_param("ss", $email, $role);
+    $stmt->execute();
+    $stmt->bind_result($id_user, $nama, $password_hash, $role_db);
+    $stmt->fetch();
+    $stmt->close();
+
+    if($password_hash && password_verify($password_asli, $password_hash)){
+        $_SESSION["status_login"] = true;
+        $_SESSION["id_user"] = $id_user;
+        $_SESSION["nama"] = $nama;
+        $_SESSION["role"] = $role_db;
+
+        if($role_db == "admin"){
+            header("Location: admin.php");
+        }else{
+            header("Location: index.php");
+        }
+        exit();
+    } else{
+        header("Location: login.php?pesan=salah");
+        exit();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -22,16 +57,16 @@
         <h1>Rentalku</h1>
 
         <?php
-        if (isset($_GET["pesan"])) {
-            if ($_GET["pesan"] == "salah") {
+        if(isset($_GET["pesan"])){
+            if($_GET["pesan"] == "salah"){
                 echo "<div class='gagal'>Email atau password salah!</div>";
-            } else if ($_GET["pesan"] == "sukses") {
+            }else if($_GET["pesan"] == "sukses"){
                 echo "<div class='berhasil'>Pendaftaran berhasil, silakan login.</div>";
             }
         }
         ?>
 
-        <form action="login_proses.php" method="POST">
+        <form action="login.php" method="POST">
             <div class="role">
                 <input type="radio" name="role" id="role-pelanggan" value="pelanggan" checked>
                 <label for="role-pelanggan">Pengunjung</label>
@@ -48,7 +83,7 @@
                 <input type="password" id="password" name="password" required>
             </div>
 
-            <button type="submit" class="btn">LOGIN</button>
+            <button type="submit" name="submit" class="btn">LOGIN</button>
         </form>
 
         <p class="switch" id="tautan-signup">Belum punya akun? <a href="signup.php">Sign Up</a></p>

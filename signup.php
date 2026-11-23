@@ -1,3 +1,47 @@
+<?php
+include "koneksi.php";
+
+$pesan = "";
+
+if(isset($_POST["submit"])){
+    $nama = trim($_POST["nama"]);
+    $email = trim($_POST["email"]);
+    $phone = trim($_POST["phone"]);
+    $password_asli = $_POST["password"];
+    $role = "pelanggan";
+
+    $stmt = $koneksi->prepare("SELECT email FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($cek);
+    $stmt->fetch();
+    $stmt->close();
+
+    if($nama == "" || $email == "" || $phone == "" || $password_asli == ""){
+        $pesan = "Semua Kolom Wajib Diisi!";
+    }else if(!is_numeric($phone)){
+        $pesan = "Nomor HP Hanya Boleh Berisi Angka!";
+    }else if(strlen($password_asli) < 8){
+        $pesan = "Password Minimal 8 Karakter!";
+    }else if($cek){
+        $pesan = "Email Sudah Dipakai!";
+    }else{
+        $password_hash = password_hash($password_asli, PASSWORD_DEFAULT);
+
+        $stmt = $koneksi->prepare("INSERT INTO users(nama, email, no_hp, password, role) VALUES(?,?,?,?,?)");
+        $stmt->bind_param("sssss", $nama, $email, $phone, $password_hash, $role);
+
+        if($stmt->execute()){
+            header("Location: login.php?pesan=sukses");
+            exit();
+        }else{
+            $pesan = "Pendaftaran Gagal : " . $koneksi->error;
+        }
+        $stmt->close();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -22,23 +66,11 @@
         <h3>Buat akun baru di</h3>
         <h1>Rentalku</h1>
 
-        <?php
-        if (isset($_GET["pesan"])) {
-            if ($_GET["pesan"] == "kosong") {
-                echo "<div class='gagal'>Semua kolom wajib diisi.</div>";
-            } else if ($_GET["pesan"] == "hp_salah") {
-                echo "<div class='gagal'>Nomor HP hanya boleh berisi angka.</div>";
-            } else if ($_GET["pesan"] == "pw_pendek") {
-                echo "<div class='gagal'>Password minimal 8 karakter.</div>";
-            } else if ($_GET["pesan"] == "email_ada") {
-                echo "<div class='gagal'>Email sudah terdaftar.</div>";
-            } else if ($_GET["pesan"] == "gagal") {
-                echo "<div class='gagal'>Pendaftaran gagal, coba lagi.</div>";
-            }
-        }
-        ?>
+        <?php if($pesan != ""){ ?>
+            <div class="gagal"><?php echo $pesan; ?></div>
+        <?php } ?>
 
-        <form action="signup_proses.php" method="POST">
+        <form action="signup.php" method="POST">
             <div class="field">
                 <label for="nama">Name</label>
                 <input type="text" id="nama" name="nama" required>
@@ -55,7 +87,7 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Minimal 8 karakter" required>
             </div>
-            <button type="submit" class="btn">SIGN UP</button>
+            <button type="submit" name="submit" class="btn">SIGN UP</button>
         </form>
         <p class="switch">Sudah punya akun? <a href="login.php">Sign In</a></p>
     </main>
