@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 22, 2026 at 01:47 PM
+-- Generation Time: Nov 23, 2026 at 03:45 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -66,7 +66,13 @@ CREATE TABLE `mobil` (
 INSERT INTO `mobil` (`id_mobil`, `id_kategori`, `nama_mobil`, `transmisi`, `kursi`, `harga_harian`, `foto`, `deskripsi`, `aktif`) VALUES
 (1, 1, 'Toyota Avanza', 'manual', 7, 350000, 'mobil_6afab192ed4d5.jpg', 'Mobil keluarga yang nyaman dan muat banyak penumpang.', 1),
 (2, 1, 'Daihatsu Xenia', 'manual', 7, 330000, 'mobil_6afab3c9a1dbb.jpeg', 'MPV ekonomis dan irit untuk perjalanan keluarga.', 1),
-(3, 1, 'Suzuki Ertiga', 'matic', 6, 380000, 'mobil_6afab420a7e56.jpg', 'MPV matic yang nyaman untuk perjalanan jauh', 1);
+(3, 1, 'Suzuki Ertiga', 'matic', 6, 380000, 'mobil_6afab420a7e56.jpg', 'MPV matic yang nyaman untuk perjalanan jauh', 1),
+(5, 3, 'Honda Brio Satya', 'manual', 5, 275000, 'mobil_6b044ad9875af.jpg', 'City car ringkas dan irit bahan bakar, cocok untuk mobilitas harian dalam kota serta parkir di ruang terbatas', 1),
+(6, 3, 'Toyota Agya', 'matic', 5, 300000, 'mobil_6b044b3421265.jpg', 'Mobil perkotaan lincah dengan pengendalian ringan, nyaman untuk perjalanan kerja atau jalan santai', 1),
+(7, 3, 'Daihatsu Sirion', 'matic', 5, 325000, 'mobil_6b044c6cc7ed1.jpg', 'Hatchback kompak dengan kabin cukup lega di kelasnya, praktis untuk perjalanan dalam kota bersama teman atau keluarga kecil', 1),
+(8, 2, 'Honda HR-V', 'matic', 6, 450000, 'mobil_6b044cb7ba319.jpg', 'Compact SUV bergaya modern dengan posisi berkendara tinggi, nyaman untuk perjalanan dalam kota maupun luar kota', 1),
+(9, 2, 'Toyota Rush', 'manual', 8, 400000, 'mobil_6b044d22cb78e.png', 'SUV 7-penumpang dengan ground clearance tinggi, tangguh untuk rute menanjak atau perjalanan keluarga', 1),
+(10, 2, 'Mitsubishi Xpander Cross', 'matic', 7, 475000, 'mobil_6b044d647cc7b.jpg', 'SUV keluarga yang lapang dan stabil dengan suspensi empuk, cocok untuk perjalanan jarak jauh dan bawaan banyak', 1);
 
 -- --------------------------------------------------------
 
@@ -93,7 +99,10 @@ CREATE TABLE `pesanan` (
 --
 
 INSERT INTO `pesanan` (`id_pesanan`, `id_user`, `id_mobil`, `tgl_mulai`, `tgl_selesai`, `total_harga`, `status_pesanan`, `metode_bayar`, `status_bayar`, `bukti_bayar`, `tgl_pesan`) VALUES
-(1, 3, 2, '2026-11-23', '2026-12-01', 2970000, 'menunggu', NULL, 'belum_bayar', NULL, '2026-11-22 12:11:29');
+(1, 3, 2, '2026-11-23', '2026-12-01', 2970000, 'selesai', NULL, 'belum_bayar', NULL, '2026-11-22 12:11:29'),
+(2, 3, 2, '2026-11-22', '2026-12-01', 3300000, 'diterima', NULL, 'belum_bayar', NULL, '2026-11-22 13:44:20'),
+(3, 3, 2, '2026-12-02', '2026-12-03', 660000, 'dibatalkan', 'transfer', 'belum_bayar', NULL, '2026-11-23 12:34:46'),
+(4, 3, 5, '2026-11-23', '2026-11-30', 2200000, 'menunggu', NULL, 'belum_bayar', NULL, '2026-11-23 14:43:27');
 
 -- --------------------------------------------------------
 
@@ -165,13 +174,13 @@ ALTER TABLE `kategori`
 -- AUTO_INCREMENT for table `mobil`
 --
 ALTER TABLE `mobil`
-  MODIFY `id_mobil` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_mobil` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `pesanan`
 --
 ALTER TABLE `pesanan`
-  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_pesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
