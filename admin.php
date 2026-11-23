@@ -91,7 +91,7 @@ $antrean = $koneksi->query($query);
                         Rp <?php echo number_format($p["total_harga"], 0, ",", "."); ?>
                     </span>
                 </div>
-                <form class="antrean-aksi" method="POST" action="pesananStatus.php">
+                <form class="antrean-aksi" method="POST" action="status.php">
                     <input type="hidden" name="id_pesanan" value="<?php echo $p["id_pesanan"]; ?>">
                     <input type="hidden" name="kembali" value="admin">
                     <button type="submit" class="mini ok" name="aksi" value="terima">Terima</button>

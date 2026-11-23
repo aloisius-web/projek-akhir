@@ -39,15 +39,31 @@ $hasil = $stmt->get_result();
     <div class="kepala"><h2>Pesanan saya</h2></div>
 
     <?php
-    if(isset($_GET["pesan"]) && $_GET["pesan"] == "sukses"){
-        echo "<p class='sukses'>Pesanan berhasil dibuat. Tunggu konfirmasi dari admin.</p>";
+    if(isset($_GET["pesan"])){
+        $pesan = $_GET["pesan"];
+        if($pesan == "sukses"){
+            echo "<p class='sukses'>Pesanan berhasil dibuat. Tunggu konfirmasi dari admin.</p>";
+        }else if($pesan == "batal"){
+            echo "<p class='sukses'>Pesanan berhasil dibatalkan.</p>";
+        }else if($pesan == "batal_gagal"){
+            echo "<p class='error'>Pesanan tidak bisa dibatalkan (sudah lunas, selesai, atau sudah diproses).</p>";
+        }else if($pesan == "bukti_sukses"){
+            echo "<p class='sukses'>Bukti pembayaran terkirim. Tunggu verifikasi dari admin.</p>";
+        }else if($pesan == "bukti_kosong"){
+            echo "<p class='error'>Pilih file bukti pembayaran terlebih dahulu.</p>";
+        }else if($pesan == "bukti_error"){
+            $info = isset($_GET["info"]) ? $_GET["info"] : "Upload gagal";
+            echo "<p class='error'>" . htmlspecialchars($info) . "</p>";
+        }else if($pesan == "bukti_gagal"){
+            echo "<p class='error'>Bukti pembayaran tidak bisa diunggah untuk pesanan ini.</p>";
+        }
     }
     ?>
 
     <div class="tabel-box">
     <table>
         <tr>
-            <th>No</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Status</th>
+            <th>No</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Status</th><th>Pembayaran</th><th>Aksi</th>
         </tr>
         <?php
         $no = 1;
@@ -74,10 +90,42 @@ $hasil = $stmt->get_result();
             <td><?php echo $p["tgl_mulai"]; ?> s/d <?php echo $p["tgl_selesai"]; ?></td>
             <td>Rp <?php echo number_format($p["total_harga"], 0, ",", "."); ?></td>
             <td><span class="pill <?php echo $status_warna; ?>"><?php echo $status_teks; ?></span></td>
+            <td>
+                <?php
+                $aktif = in_array($p["status_pesanan"], array("menunggu", "diterima"));
+                if($p["status_bayar"] == "lunas"){
+                    echo "<span class='pill on'>Lunas</span>";
+                }else if($p["status_bayar"] == "menunggu_verifikasi"){
+                    echo "<span class='pill tunggu'>Menunggu verifikasi</span>";
+                }else if($aktif){
+                    echo "<span class='pill tolak'>Belum bayar</span>";
+                }else{
+                    echo "-";
+                }
+                if($p["bukti_bayar"] != ""){
+                    echo "<small class='bukti'><a href='uploads/bukti/" . htmlspecialchars($p["bukti_bayar"]) . "' target='_blank'>Lihat bukti</a></small>";
+                }
+                ?>
+            </td>
+            <td class="aksi">
+                <?php if($aktif && $p["status_bayar"] != "lunas"){ ?>
+                    <form class="form-bukti" method="POST" action="uploadBukti.php" enctype="multipart/form-data">
+                        <input type="hidden" name="id_pesanan" value="<?php echo $p["id_pesanan"]; ?>">
+                        <input type="file" name="bukti" accept=".jpg,.jpeg,.png" required>
+                        <button type="submit" class="mini biru"><?php echo $p["bukti_bayar"] != "" ? "Ganti bukti" : "Upload bukti"; ?></button>
+                    </form>
+                    <form method="POST" action="batalPesanan.php">
+                        <input type="hidden" name="id_pesanan" value="<?php echo $p["id_pesanan"]; ?>">
+                        <button type="submit" class="mini no" onclick="return confirm('Batalkan pesanan ini?')">Batalkan</button>
+                    </form>
+                <?php }else{ ?>
+                    -
+                <?php } ?>
+            </td>
         </tr>
         <?php }?>
         <?php if($no == 1){ ?>
-        <tr><td class="kosong" colspan="5">Belum ada pesanan. Pilih mobil di katalog untuk mulai!</td></tr>
+        <tr><td class="kosong" colspan="7">Belum ada pesanan. Pilih mobil di katalog untuk mulai!</td></tr>
         <?php }?>
     </table>
     </div>

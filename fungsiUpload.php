@@ -1,5 +1,5 @@
 <?php
-function upload_foto($file, &$error){
+function upload_foto($file, &$error, $subfolder = '', $prefix = 'mobil_'){
     $error = "";
     if($file['error'] === UPLOAD_ERR_NO_FILE){
         return null;
@@ -21,11 +21,11 @@ function upload_foto($file, &$error){
         $error = "File tidak valid";
         return null;
     }
-    $folder = __DIR__ . '/uploads/';
+    $folder = __DIR__ . '/uploads/' . ($subfolder != '' ? $subfolder . '/' : '');
     if(!is_dir($folder)){
         mkdir($folder, 0755, true);
     }
-    $namaBaru = uniqid('mobil_') . '.' . $ext;
+    $namaBaru = uniqid($prefix) . '.' . $ext;
     if(!move_uploaded_file($file['tmp_name'], $folder . $namaBaru)){
         $error = "Gagal menyimpan file";
         return null;

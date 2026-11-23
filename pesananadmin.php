@@ -59,7 +59,7 @@ $hasil = $stmt->get_result();
     <div class="tabel-box">
     <table>
         <tr>
-            <th>No</th><th>Pelanggan</th><th>Mobil</th><th>Tanggal</th><th>Durasi</th><th>Total</th><th>Aksi</th>
+            <th>No</th><th>Pelanggan</th><th>Mobil</th><th>Tanggal</th><th>Durasi</th><th>Total</th><th>Pembayaran</th><th>Aksi</th>
         </tr>
         <?php
         $no = 1;
@@ -76,6 +76,28 @@ $hasil = $stmt->get_result();
             <td><?php echo $p["tgl_mulai"]; ?> s/d <?php echo $p["tgl_selesai"]; ?></td>
             <td><?php echo $hari; ?> hari</td>
             <td>Rp <?php echo number_format($p["total_harga"], 0, ",", "."); ?></td>
+            <td>
+                <?php
+                if($p["status_bayar"] == "lunas"){
+                    echo "<span class='pill on'>Lunas</span>";
+                }else if($p["status_bayar"] == "menunggu_verifikasi"){
+                    echo "<span class='pill tunggu'>Menunggu verifikasi</span>";
+                }else{
+                    echo "<span class='pill tolak'>Belum bayar</span>";
+                }
+                if($p["bukti_bayar"] != ""){
+                    echo "<small class='bukti'><a href='uploads/bukti/" . htmlspecialchars($p["bukti_bayar"]) . "' target='_blank'>Lihat bukti</a></small>";
+                }
+                if($p["status_bayar"] == "menunggu_verifikasi" && ($status == "menunggu" || $status == "diterima")){
+                ?>
+                    <form method="POST" action="status.php" class="form-verif">
+                        <input type="hidden" name="id_pesanan" value="<?php echo $p["id_pesanan"]; ?>">
+                        <input type="hidden" name="kembali" value="pesanan">
+                        <button type="submit" class="mini ok" name="aksi" value="lunas">Lunas</button>
+                        <button type="submit" class="mini no" name="aksi" value="tolak_bukti" onclick="return confirm('Tolak bukti pembayaran ini?')">Tolak bukti</button>
+                    </form>
+                <?php } ?>
+            </td>
             <td class="aksi">
                 <?php if($status == "menunggu"){ ?>
                     <form method="POST" action="status.php">
@@ -97,7 +119,7 @@ $hasil = $stmt->get_result();
         </tr>
         <?php } ?>
         <?php if($no == 1){ ?>
-        <tr><td class="kosong" colspan="7">Tidak ada pesanan berstatus <?php echo htmlspecialchars($status); ?>.</td></tr>
+        <tr><td class="kosong" colspan="8">Tidak ada pesanan berstatus <?php echo htmlspecialchars($status); ?>.</td></tr>
         <?php } ?>
     </table>
     </div>
